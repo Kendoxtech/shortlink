@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+router = DefaultRouter()
+router.register(r'url', URLViewSet, basename='url')
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('<str:url_path>/', redirect_url),  # Redirection path
 ]
