@@ -1,21 +1,19 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-
-# Create your views here.
+from django.http import JsonResponse
 import uuid
 from datetime import datetime
-
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-
 from .in_memory_db import url_mapping
 from .serializers import EncodeSerializer, DecodeSerializer
 
-BASE_URL = "http://short.est/"
+BASE_URL = "http://127.0.0.1:8000/"
 
 class URLViewSet(viewsets.ViewSet):
+    def list(self, request):
+        return Response({'urls': url_mapping})
 
     @action(detail=False, methods=['post'])
     def encode(self, request):
@@ -50,9 +48,27 @@ class URLViewSet(viewsets.ViewSet):
             return Response(record)
         return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['get'])
-    def list_urls(self, request):
-        return Response({'urls': url_mapping})
+    @action(detail=False, methods=['get'], url_path='search')
+    def search(self, request):
+        query = request.query_params.get('query', '')
+        if len(query) < 3:
+            return Response({"error": "Search term must be at least 3 characters."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Search for URLs containing the query in the long_url
+        matching_urls = {short_code: details for short_code, details in url_mapping.items() if
+                         query.lower() in details['long_url'].lower()}
+
+        return Response({'urls': matching_urls})
+
+    def destroy(self, request, pk=None):
+        """
+        Custom delete method to delete the URL by the short code (pk)
+        """
+        if pk in url_mapping:
+            del url_mapping[pk]
+            return Response({'message': 'URL deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 def redirect_url(request, url_path):

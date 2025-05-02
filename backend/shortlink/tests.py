@@ -65,12 +65,12 @@ class URLShortenerAPITestCase(TestCase):
 
     def test_search_valid_query(self):
         self.client.post(self.encode_url, {'long_url': 'https://indicina.co/test-page'}, format='json')
-        response = self.client.get(f'{self.search_url}?query=indi')
+        response = self.client.get(f'{self.search_url}?query=indi', follow=True)  # Follow redirects
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('urls', response.data)
         self.assertTrue(any('indicina' in v['long_url'] for v in response.data['urls'].values()))
 
     def test_search_invalid_query_too_short(self):
-        response = self.client.get(f'{self.search_url}?query=ab')
+        response = self.client.get(f'{self.search_url}?query=ab', follow=True)  # Follow redirects
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)

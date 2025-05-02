@@ -15,12 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
-router = DefaultRouter()
-router.register(r'url', URLViewSet, basename='url')
+from django.urls import path, include
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('<str:url_path>/', redirect_url),  # Redirection path
+    path('admin/', admin.site.urls),
+    # Include the app's URLs
+    path('', include('shortlink.urls')),
 ]

@@ -39,9 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'shortlink',
-    'rest_framework'
+    'rest_framework',
     'corsheaders',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+BASE_URL = "http://localhost:8000/shortener/"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +60,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
 ROOT_URLCONF = 'shortener.urls'
 
 TEMPLATES = [
