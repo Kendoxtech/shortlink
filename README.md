@@ -20,7 +20,7 @@
 
 ## 🖥️ Tech Stack
 
-- **Backend:** Django (Python)
+- **Backend:** DjangoRestFramework (Python)
 - **Frontend:** ReactJS (TailwindCSS)
 - **Testing:** Pytest
 
@@ -52,7 +52,7 @@
    python manage.py runsever
    ```
 
-   - Access API Docs at: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
 
 ### 🌐 Frontend
 
